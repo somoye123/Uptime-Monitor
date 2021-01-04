@@ -13,6 +13,14 @@
     "@babel/preset-env": "^7.12.11",
     "@babel/runtime": "^7.12.5"
   },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec babel-node server.js",
+    "clean": "rm -rf build && mkdir build",
+    "start": "node server.js",
+    "build": "npm run clean && npm run build-server",
+    "build-server": "babel -d ./build ./src -s"
+  },
   "devDependencies": {
     "nodemon": "^2.0.6"
   }
