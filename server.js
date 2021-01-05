@@ -16,6 +16,9 @@ const server = http.createServer((req, res) => {
   let trimmedPath = path.replace(/^\/+|\/+$/g, '');
 
   res.end('Hello World|\n');
+
+  // Log the request/response
+  console.log('Request received on path: ' + trimmedPath);
 });
 
 // start the server, and have it listen on port 3000
