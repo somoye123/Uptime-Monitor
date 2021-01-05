@@ -8,6 +8,10 @@ import url from 'url';
 
 // Server respond to all request with a string
 const server = http.createServer((req, res) => {
+
+  // Parse request url
+  let parsedUrl = url.parse(req.url, true);
+  
   res.end('Hello World|\n');
 });
 
