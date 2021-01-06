@@ -25,11 +25,19 @@ const server = http.createServer((req, res) => {
   //Get the headers as an object
   const headers = req.headers;
 
+  // Get the payload,if any
+  const decoder = new StringDecoder('utf-8');
+  let buffer = '';
+  req.on('data', (data) => (buffer += decoder.write(data)));
+  req.on('end', () => {
+    buffer += decoder.end();
 
-  res.end('Hello World|\n');
+    // Send the response
+    res.end('Hello World!\n');
 
-  // Log the request/response
-  console.log('Request received on path: ' + trimmedPath);
+    // Log the request/response
+    console.log('Request received with this payload: ', buffer);
+  });
 });
 
 // start the server, and have it listen on port 3000
