@@ -21,6 +21,9 @@ const server = http.createServer((req, res) => {
   // Get the HTTP method
   const method = req.method.toLowerCase();
 
+  //Get the headers as an object
+  const headers = req.headers;
+ 
   res.end('Hello World|\n');
 
   // Log the request/response
