@@ -5,6 +5,7 @@
 //  Dependencies
 import http from 'http';
 import url from 'url';
+import { StringDecoder } from 'string_decoder';
 
 // Server respond to all request with a string
 const server = http.createServer((req, res) => {
@@ -23,7 +24,8 @@ const server = http.createServer((req, res) => {
 
   //Get the headers as an object
   const headers = req.headers;
- 
+
+
   res.end('Hello World|\n');
 
   // Log the request/response
