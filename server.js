@@ -8,8 +8,8 @@ import url from 'url';
 import { StringDecoder } from 'string_decoder';
 import config from './config';
 
-// Server respond to all request with a string
-const server = http.createServer((req, res) => {});
+// Instantiate the HTTP server
+const server = http.createServer((req, res) => unifiedServer(req, res));
 
 // Start the server
 server.listen(config.port, () => {
