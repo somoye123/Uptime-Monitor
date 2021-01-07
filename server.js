@@ -47,3 +47,8 @@ server.listen(3000, () =>
 
 //Define all the handles
 const handlers = {};
+
+// Sample handler
+handlers.sample = (data, callback) => {
+  callback(406, { name: 'sample handler' });
+};
