@@ -101,5 +101,5 @@ handlers.notFound = (data, callback) => callback(404);
 
 // Define the request router
 const router = {
-  sample: handlers.sample,
+  ping: handlers.ping,
 };
