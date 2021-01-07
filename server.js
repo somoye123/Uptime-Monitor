@@ -29,6 +29,11 @@ const httpsServer = https.createServer(httpsServerOptions, (req, res) =>
   unifiedServer(req, res)
 );
 
+// Start the HTTPS server
+httpsServer.listen(config.httpsPort, () =>
+  console.log('The HTTPS server is running on port ' + config.httpsPort)
+);
+
 const unifiedServer = (req, res) => {
   // Parse request url
   const parsedUrl = url.parse(req.url, true);
