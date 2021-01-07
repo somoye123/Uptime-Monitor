@@ -6,6 +6,7 @@
 import http from 'http';
 import url from 'url';
 import { StringDecoder } from 'string_decoder';
+import config from './config';
 
 // Server respond to all request with a string
 const server = http.createServer((req, res) => {
