@@ -12,9 +12,9 @@ import config from './config';
 const server = http.createServer((req, res) => unifiedServer(req, res));
 
 // Start the server
-server.listen(config.port, () => {
+server.listen(config.httpPort, () => {
   console.log(
-    `The server is up and running on port ${config.port} in ${config.envName} mode.`
+    `The server is up and running on port ${config.httpPort} in ${config.envName} mode.`
   );
 });
 
