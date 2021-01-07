@@ -38,6 +38,15 @@ const server = http.createServer((req, res) => {
         ? router[trimmedPath]
         : handlers.notFound;
 
+    // Construct the data object to send to the handler
+    let data = {
+      trimmedPath,
+      queryStringObject,
+      method,
+      headers,
+      payload: buffer,
+    };
+
     // Send the response
     res.end('Hello World!\n');
 
