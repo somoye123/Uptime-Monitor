@@ -9,7 +9,16 @@ import { StringDecoder } from 'string_decoder';
 import config from './config';
 
 // Server respond to all request with a string
-const server = http.createServer((req, res) => {
+const server = http.createServer((req, res) => {});
+
+// Start the server
+server.listen(config.port, () => {
+  console.log(
+    `The server is up and running on port ${config.port} in ${config.envName} mode.`
+  );
+});
+
+const unifiedServer = (req, res) => {
   // Parse request url
   const parsedUrl = url.parse(req.url, true);
 
@@ -66,14 +75,7 @@ const server = http.createServer((req, res) => {
       console.log('Returning this response: ', statusCode, payloadString);
     });
   });
-});
-
-// Start the server
-server.listen(config.port, () => {
-  console.log(
-    `The server is up and running on port ${config.port} in ${config.envName} mode.`
-  );
-});
+};
 
 //Define all the handles
 const handlers = {};
