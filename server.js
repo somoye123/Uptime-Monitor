@@ -7,7 +7,7 @@ import http from 'http';
 import https from 'https';
 import url from 'url';
 import { StringDecoder } from 'string_decoder';
-import config from './config';
+import config from './lib/config';
 import fs from 'fs';
 import handlers from './lib/handler';
 
