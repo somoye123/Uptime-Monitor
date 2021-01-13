@@ -9,6 +9,7 @@ import url from 'url';
 import { StringDecoder } from 'string_decoder';
 import config from './config';
 import fs from 'fs';
+import handlers from './lib/handler';
 
 // Instantiate the HTTP server
 const server = http.createServer((req, res) => unifiedServer(req, res));
