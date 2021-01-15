@@ -127,4 +127,35 @@ handlers._tokens.put = (data, callback) => {
   }
 };
 
+// Tokens - delete
+// Required data: id
+// Optional data: none
+handlers._tokens.delete = (data, callback) => {
+  // Check that id is valid
+  const id =
+    typeof data.queryStringObject.id == 'string' &&
+    data.queryStringObject.id.trim().length == 20
+      ? data.queryStringObject.id.trim()
+      : false;
+  if (id) {
+    // Lookup the token
+    _data.read('tokens', id, function (err, tokenData) {
+      if (!err && tokenData) {
+        // Delete the token
+        _data.delete('tokens', id, function (err) {
+          if (!err) {
+            callback(200);
+          } else {
+            callback(500, { Error: 'Could not delete the specified token' });
+          }
+        });
+      } else {
+        callback(400, { Error: 'Could not find the specified token.' });
+      }
+    });
+  } else {
+    callback(400, { Error: 'Missing required field' });
+  }
+};
+
 export default Controller;
