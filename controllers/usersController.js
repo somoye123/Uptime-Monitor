@@ -91,17 +91,25 @@ Controller.get = (data, callback) => {
       ? data.queryStringObject.phone.trim()
       : false;
   if (phone) {
-    // Get token from headers
     const token =
       typeof data.headers.token == 'string' ? data.headers.token : false;
-    // Lookup the user
-    _data.read('users', phone, function (err, data) {
-      if (!err && data) {
-        // Remove the hashed password from the user user object before returning it to the requester
-        delete data.hashedPassword;
-        callback(200, data);
+    // Verify that the given token is valid for the phone number
+    verifyToken(token, phone, (tokenIsValid) => {
+      if (tokenIsValid) {
+        // Lookup the user
+        _data.read('users', phone, (err, data) => {
+          if (!err && data) {
+            // Remove the hashed password from the user user object before returning it to the requester
+            delete data.hashedPassword;
+            callback(200, data);
+          } else {
+            callback(404);
+          }
+        });
       } else {
-        callback(404);
+        callback(403, {
+          Error: 'Missing required token in header, or token is invalid.',
+        });
       }
     });
   } else {
