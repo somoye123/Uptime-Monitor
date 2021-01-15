@@ -1,3 +1,7 @@
+// Dependencies
+import _data from '../lib/data';
+import helpers from '../lib/helpers';
+
 const Controller = {};
 
 // Users - post
@@ -170,7 +174,7 @@ Controller.put = (data, callback) => {
 };
 
 // Required data: phone
-handlers._users.delete = (data, callback) => {
+Controller.delete = (data, callback) => {
   // Check that phone number is valid
   const phone =
     typeof data.queryStringObject.phone == 'string' &&
