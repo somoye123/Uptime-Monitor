@@ -198,18 +198,31 @@ Controller.delete = (data, callback) => {
       ? data.queryStringObject.phone.trim()
       : false;
   if (phone) {
-    // Lookup the user
-    _data.read('users', phone, function (err, data) {
-      if (!err && data) {
-        _data.delete('users', phone, function (err) {
-          if (!err) {
-            callback(200);
+    // Get token from headers
+    const token =
+      typeof data.headers.token == 'string' ? data.headers.token : false;
+
+    // Verify that the given token is valid for the phone number
+    verifyToken(token, phone, (tokenIsValid) => {
+      if (tokenIsValid) {
+        // Lookup the user
+        _data.read('users', phone, (err, data) => {
+          if (!err && data) {
+            _data.delete('users', phone, (err) => {
+              if (!err) {
+                callback(200);
+              } else {
+                callback(500, { Error: 'Could not delete the specified user' });
+              }
+            });
           } else {
-            callback(500, { Error: 'Could not delete the specified user' });
+            callback(400, { Error: 'Could not find the specified user.' });
           }
         });
       } else {
-        callback(400, { Error: 'Could not find the specified user.' });
+        callback(403, {
+          Error: 'Missing required token in header, or token is invalid.',
+        });
       }
     });
   } else {
