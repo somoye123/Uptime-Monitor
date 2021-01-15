@@ -148,32 +148,37 @@ Controller.put = (data, callback) => {
   if (phone) {
     // Error if nothing is sent to update
     if (firstName || lastName || password) {
-      // Lookup the user
-      _data.read('users', phone, (err, userData) => {
-        if (!err && userData) {
-          // Update the fields if necessary
-          if (firstName) {
-            userData.firstName = firstName;
-          }
-          if (lastName) {
-            userData.lastName = lastName;
-          }
-          if (password) {
-            userData.hashedPassword = helpers.hash(password);
-          }
-          // Store the new updates
-          _data.update('users', phone, userData, function (err) {
-            if (!err) {
-              // Remove the hashed password from the user user object before returning it to the requester
-              delete userData.hashedPassword;
-              callback(200, userData);
+      // Get token from headers
+      const token =
+        typeof data.headers.token == 'string' ? data.headers.token : false;
+
+      // Verify that the given token is valid for the phone number
+      verifyToken(token, phone, (tokenIsValid) => {
+        if (tokenIsValid) {
+          // Lookup the user
+          _data.read('users', phone, (err, userData) => {
+            if (!err && userData) {
+              // Update the fields if necessary
+              if (firstName) userData.firstName = firstName;
+              if (lastName) userData.lastName = lastName;
+              if (password) userData.hashedPassword = helpers.hash(password);
+
+              // Store the new updates
+              _data.update('users', phone, userData, (err) => {
+                if (!err) {
+                  callback(200);
+                } else {
+                  callback(500, { Error: 'Could not update the user.' });
+                }
+              });
             } else {
-              console.log(err);
-              callback(500, { Error: 'Could not update the user.' });
+              callback(400, { Error: 'Specified user does not exist.' });
             }
           });
         } else {
-          callback(400, { Error: 'Specified user does not exist.' });
+          callback(403, {
+            Error: 'Missing required token in header, or token is invalid.',
+          });
         }
       });
     } else {
