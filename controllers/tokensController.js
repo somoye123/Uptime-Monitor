@@ -60,7 +60,7 @@ Controller.post = (data, callback) => {
 // Tokens - get
 // Required data: id
 // Optional data: none
-handlers._tokens.get = (data, callback) => {
+Controller.get = (data, callback) => {
   // Check that id is valid
   const id =
     typeof data.queryStringObject.id == 'string' &&
@@ -84,7 +84,7 @@ handlers._tokens.get = (data, callback) => {
 // Tokens - put
 // Required data: id, extend
 // Optional data: none
-handlers._tokens.put = (data, callback) => {
+Controller.put = (data, callback) => {
   const id =
     typeof data.payload.id == 'string' && data.payload.id.trim().length == 20
       ? data.payload.id.trim()
@@ -130,7 +130,7 @@ handlers._tokens.put = (data, callback) => {
 // Tokens - delete
 // Required data: id
 // Optional data: none
-handlers._tokens.delete = (data, callback) => {
+Controller.delete = (data, callback) => {
   // Check that id is valid
   const id =
     typeof data.queryStringObject.id == 'string' &&
