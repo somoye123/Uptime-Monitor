@@ -1,7 +1,7 @@
 // Dependencies
 import _data from '../lib/data';
 import helpers from '../lib/helpers';
-
+import { verifyToken } from './tokensController';
 const Controller = {};
 
 // Users - post
@@ -91,6 +91,9 @@ Controller.get = (data, callback) => {
       ? data.queryStringObject.phone.trim()
       : false;
   if (phone) {
+    // Get token from headers
+    const token =
+      typeof data.headers.token == 'string' ? data.headers.token : false;
     // Lookup the user
     _data.read('users', phone, function (err, data) {
       if (!err && data) {
