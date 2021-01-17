@@ -227,4 +227,84 @@ Controller.put = (data, callback) => {
   }
 };
 
+// Checks - delete
+// Required data: id
+// Optional data: none
+Controller.delete = (data, callback) => {
+  // Check that id is valid
+  const id =
+    typeof data.queryStringObject.id == 'string' &&
+    data.queryStringObject.id.trim().length == 20
+      ? data.queryStringObject.id.trim()
+      : false;
+  if (id) {
+    // Lookup the check
+    _data.read('checks', id, (err, checkData) => {
+      if (!err && checkData) {
+        // Get the token that sent the request
+        const token =
+          typeof data.headers.token == 'string' ? data.headers.token : false;
+        // Verify that the given token is valid and belongs to the user who created the check
+        verifyToken(token, checkData.userPhone, (tokenIsValid) => {
+          if (tokenIsValid) {
+            // Delete the check data
+            _data.delete('checks', id, (err) => {
+              if (!err) {
+                // Lookup the user's object to get all their checks
+                _data.read('users', checkData.userPhone, (err, userData) => {
+                  if (!err) {
+                    const userChecks =
+                      typeof userData.checks == 'object' &&
+                      userData.checks instanceof Array
+                        ? userData.checks
+                        : [];
+
+                    // Remove the deleted check from their list of checks
+                    const checkPosition = userChecks.indexOf(id);
+                    if (checkPosition > -1) {
+                      userChecks.splice(checkPosition, 1);
+                      // Re-save the user's data
+                      userData.checks = userChecks;
+                      _data.update(
+                        'users',
+                        checkData.userPhone,
+                        userData,
+                        (err) => {
+                          !err
+                            ? callback(200)
+                            : callback(500, {
+                                Error: 'Could not update the user.',
+                              });
+                        }
+                      );
+                    } else {
+                      callback(500, {
+                        Error:
+                          "Could not find the check on the user's object, so could not remove it.",
+                      });
+                    }
+                  } else {
+                    callback(500, {
+                      Error:
+                        'Could not find the user who created the check, so could not remove the check from the list of checks on their user object.',
+                    });
+                  }
+                });
+              } else {
+                callback(500, { Error: 'Could not delete the check data.' });
+              }
+            });
+          } else {
+            callback(403);
+          }
+        });
+      } else {
+        callback(400, { Error: 'The check ID specified could not be found' });
+      }
+    });
+  } else {
+    callback(400, { Error: 'Missing valid id' });
+  }
+};
+
 export default Controller;
