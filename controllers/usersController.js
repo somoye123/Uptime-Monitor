@@ -208,9 +208,40 @@ Controller.delete = (data, callback) => {
         // Lookup the user
         _data.read('users', phone, (err, data) => {
           if (!err && data) {
+            // Delete the user's data
             _data.delete('users', phone, (err) => {
               if (!err) {
-                callback(200);
+                // Delete each of the checks associated with the user
+                let userChecks =
+                  typeof userData.checks == 'object' &&
+                  userData.checks instanceof Array
+                    ? userData.checks
+                    : [];
+                const checksToDelete = userChecks.length;
+                if (checksToDelete > 0) {
+                  const checksDeleted = 0;
+                  const deletionErrors = false;
+                  // Loop through the checks
+                  userChecks.forEach((checkId) => {
+                    // Delete the check
+                    _data.delete('checks', checkId, (err) => {
+                      if (err) deletionErrors = true;
+                      checksDeleted++;
+                      if (checksDeleted == checksToDelete) {
+                        if (!deletionErrors) {
+                          callback(200);
+                        } else {
+                          callback(500, {
+                            Error:
+                              "Errors encountered while attempting to delete all of the user's checks. All checks may not have been deleted from the system successfully.",
+                          });
+                        }
+                      }
+                    });
+                  });
+                } else {
+                  callback(200);
+                }
               } else {
                 callback(500, { Error: 'Could not delete the specified user' });
               }
