@@ -115,4 +115,35 @@ Controller.post = (data, callback) => {
   }
 };
 
+// Checks - get
+// Required data: id
+// Optional data: none
+Controller.get = (data, callback) => {
+  // Check that id is valid
+  const id =
+    typeof data.queryStringObject.id == 'string' &&
+    data.queryStringObject.id.trim().length == 20
+      ? data.queryStringObject.id.trim()
+      : false;
+  if (id) {
+    // Lookup the check
+    _data.read('checks', id, (err, checkData) => {
+      if (!err && checkData) {
+        // Get the token that sent the request
+        const token =
+          typeof data.headers.token == 'string' ? data.headers.token : false;
+        // Verify that the given token is valid and belongs to the user who created the check
+        verifyToken(token, checkData.userPhone, (tokenIsValid) => {
+          // Return check data
+          tokenIsValid ? callback(200, checkData) : callback(403);
+        });
+      } else {
+        callback(404);
+      }
+    });
+  } else {
+    callback(400, { Error: 'Missing required field, or field invalid' });
+  }
+};
+
 export default Controller;
