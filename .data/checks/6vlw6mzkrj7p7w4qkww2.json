@@ -1,0 +1,11 @@
+{
+  "id": "6vlw6mzkrj7p7w4qkww2",
+  "userPhone": "8168551317",
+  "protocol": "https",
+  "url": "yahoo.com",
+  "method": "get",
+  "successCodes": [200, 201, 301, 302],
+  "timeoutSeconds": 3,
+  "state": "down",
+  "lastChecked": 1613410055771
+}
